@@ -1,6 +1,6 @@
-# Book Explorer
+# Gaelle Book Store
 
-Book Explorer is a responsive multi-page frontend web app built with:
+Gaelle Book Store is a responsive multi-page frontend web app built with:
 
 - HTML5
 - Tailwind CSS
