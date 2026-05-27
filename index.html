@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!--
+      Home Page
+      This file defines the main discovery experience for Book Explorer.
+      JavaScript from js/main.js connects this static structure to:
+      - Open Library API search results
+      - dynamic book card rendering
+      - favorite/unfavorite interactions
+    -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book Explorer | Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body class="min-h-screen bg-slate-50 text-slate-800">
+    <!--
+      Shared site header
+      The same navigation pattern appears on every page so users can move
+      between Home, Favorites, and About without learning a new layout.
+      js/ui.js adds the active-link styling and mobile menu behavior.
+    -->
+    <header class="bg-white shadow-sm">
+      <nav class="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+        <a href="./index.html" class="text-xl font-bold text-indigo-600">Book Explorer</a>
+        <button
+          id="menu-toggle"
+          class="rounded-md border border-slate-300 px-3 py-2 text-sm font-medium md:hidden"
+          aria-label="Toggle navigation menu"
+          aria-expanded="false"
+        >
+          Menu
+        </button>
+        <ul id="nav-menu" class="hidden gap-6 text-sm font-medium md:flex">
+          <li><a data-nav-link="home" href="./index.html" class="nav-link text-slate-600 hover:text-indigo-600">Home</a></li>
+          <li><a data-nav-link="favorites" href="./favorites.html" class="nav-link text-slate-600 hover:text-indigo-600">Favorites</a></li>
+          <li><a data-nav-link="about" href="./about.html" class="nav-link text-slate-600 hover:text-indigo-600">About</a></li>
+        </ul>
+      </nav>
+      <ul id="mobile-menu" class="hidden space-y-2 border-t border-slate-200 px-4 py-4 text-sm font-medium md:hidden">
+        <li><a data-nav-link="home" href="./index.html" class="nav-link block text-slate-600 hover:text-indigo-600">Home</a></li>
+        <li><a data-nav-link="favorites" href="./favorites.html" class="nav-link block text-slate-600 hover:text-indigo-600">Favorites</a></li>
+        <li><a data-nav-link="about" href="./about.html" class="nav-link block text-slate-600 hover:text-indigo-600">About</a></li>
+      </ul>
+    </header>
+
+    <main>
+      <!--
+        Hero section
+        This gives the homepage a clear purpose before the interactive search area.
+        The spacing uses mobile-first Tailwind utilities and scales up at sm/lg breakpoints.
+      -->
+      <section class="bg-indigo-600 px-4 py-16 text-white sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-7xl">
+          <h1 class="text-3xl font-bold sm:text-4xl lg:text-5xl">Discover your next favorite book</h1>
+          <p class="mt-4 max-w-2xl text-indigo-100">
+            Search by title, browse results, and save books you love to your favorites list.
+          </p>
+        </div>
+      </section>
+
+      <!--
+        Search and results section
+        Flow:
+        1. User submits a title in the form.
+        2. main.js prevents the page reload and fetches matching books.
+        3. ui.js renders loading, empty, error, or book-card states below.
+      -->
+      <section class="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+        <form id="search-form" class="flex flex-col gap-3 sm:flex-row" aria-label="Search books by title">
+          <label for="search-input" class="sr-only">Search for a book title</label>
+          <input
+            id="search-input"
+            name="search"
+            type="text"
+            placeholder="Search books by title..."
+            class="flex-1 rounded-md border border-slate-300 px-4 py-3 text-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"  
+          required/>
+          <button
+            type="submit"
+            class="rounded-md bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700"
+          >
+            Search
+          </button>
+        </form>
+
+        <!-- Status messages are injected here so screen readers can announce updates. -->
+        <div id="status-container" class="mt-6" aria-live="polite"></div>
+
+        <!--
+          Responsive book grid:
+          - 1 column on mobile
+          - 2 columns from the sm breakpoint
+          - 4 columns from the lg breakpoint
+          The grid is empty in HTML because JavaScript renders API results dynamically.
+        -->
+        <section id="books-grid" class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4" aria-label="Book results"></section>
+      </section>
+    </main>
+
+    <!-- Shared footer keeps the app feeling complete without adding extra behavior. -->
+    <footer class="border-t border-slate-200 bg-white py-6">
+      <div class="mx-auto flex w-full max-w-7xl items-center justify-between px-4 text-sm text-slate-500 sm:px-6 lg:px-8">
+        <p>Book Explorer</p>
+        <p>Built with Open Library API</p>
+      </div>
+    </footer>
+
+    <script type="module" src="./js/main.js"></script>
+  </body>
+</html>

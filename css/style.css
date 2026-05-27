@@ -1,0 +1,37 @@
+/* ========================================
+   Shared Styles
+   Tailwind handles almost all layout and visual design in this project.
+   This file contains only small global helpers that are easier to express in CSS:
+   - smooth scrolling
+   - active navigation styling
+   - loading spinner animation
+   ======================================== */
+
+/* Smooth scrolling gives internal page movement a more polished feel. */
+html,
+body {
+  scroll-behavior: smooth;
+}
+
+/* ui.js adds this class to the current navigation link on each page. */
+.active-nav {
+  color: #4f46e5;
+  font-weight: 700;
+}
+
+/* Loading spinner used while the Open Library API request is in progress. */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #cbd5e1;
+  border-top-color: #4f46e5;
+  border-radius: 9999px;
+  animation: spin 0.9s linear infinite;
+}
+
+/* Rotate the spinner continuously until JavaScript replaces the loading state. */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
