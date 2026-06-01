@@ -17,6 +17,25 @@ export function isFavorite(bookKey) {
   return favorites.some((book) => book.key === bookKey);
 }
 
+// Add a book to favorites only if it is not already saved.
+// Returning a structured result makes the calling page easy to read.
+export function addFavorite(book) {
+  const favorites = getFavorites();
+  const alreadyExists = favorites.some((favorite) => favorite.key === book.key);
+
+  // Avoid duplicate favorites.
+  // Returning alreadyExists lets the UI show a helpful message instead of silently doing nothing.
+  if (alreadyExists) {
+    return { updatedFavorites: favorites, wasAdded: false, alreadyExists: true };
+  }
+
+  // Use a new array instead of mutating the old one.
+  // This pattern is easier to reason about as apps grow and state updates become more complex.
+  const updatedFavorites = [...favorites, book];
+  saveFavorites(updatedFavorites);
+  return { updatedFavorites, wasAdded: true, alreadyExists: false };
+}
+
 // Toggle a book in or out of favorites.
 // This keeps the Home page simple: the page does not need to know whether
 // the action is an add or remove, only that favorites should be toggled.
@@ -26,15 +45,12 @@ export function toggleFavorite(book) {
 
   // If the book already exists, remove it and persist the updated array.
   if (exists) {
-    const updated = favorites.filter((fav) => fav.key !== book.key);
-    saveFavorites(updated);
-    return { updatedFavorites: updated, wasAdded: false };
+    return removeFavorite(book.key);
   }
 
-  // If the book is new, append it and persist the updated array.
-  const updated = [...favorites, book];
-  saveFavorites(updated);
-  return { updatedFavorites: updated, wasAdded: true };
+  // If the book is not saved yet, reuse addFavorite so duplicate-prevention
+  // and localStorage synchronization stay centralized.
+  return addFavorite(book);
 }
 
 // Remove one saved book by its key.
@@ -42,6 +58,9 @@ export function toggleFavorite(book) {
 export function removeFavorite(bookKey) {
   const favorites = getFavorites();
   const updated = favorites.filter((book) => book.key !== bookKey);
+
+  // wasRemoved helps the UI decide whether it should show confirmation feedback.
+  const wasRemoved = updated.length !== favorites.length;
   saveFavorites(updated);
-  return updated;
+  return { updatedFavorites: updated, wasRemoved };
 }

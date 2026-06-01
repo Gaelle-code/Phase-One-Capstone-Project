@@ -38,14 +38,22 @@
           Menu
         </button>
         <ul id="nav-menu" class="hidden gap-6 text-sm font-medium md:flex">
+          <!--
+            Desktop navigation:
+            The Favorites link includes a live count span that ui.js updates from localStorage.
+          -->
           <li><a data-nav-link="home" href="./index.html" class="nav-link text-slate-600 hover:text-indigo-600">Home</a></li>
-          <li><a data-nav-link="favorites" href="./favorites.html" class="nav-link text-slate-600 hover:text-indigo-600">Favorites</a></li>
+          <li><a data-nav-link="favorites" href="./favorites.html" class="nav-link text-slate-600 hover:text-indigo-600">Favorites (<span data-favorites-count>0</span>)</a></li>
           <li><a data-nav-link="about" href="./about.html" class="nav-link text-slate-600 hover:text-indigo-600">About</a></li>
         </ul>
       </nav>
       <ul id="mobile-menu" class="hidden space-y-2 border-t border-slate-200 px-4 py-4 text-sm font-medium md:hidden">
+        <!--
+          Mobile navigation:
+          Hidden by default and toggled by ui.js when the Menu button is clicked.
+        -->
         <li><a data-nav-link="home" href="./index.html" class="nav-link block text-slate-600 hover:text-indigo-600">Home</a></li>
-        <li><a data-nav-link="favorites" href="./favorites.html" class="nav-link block text-slate-600 hover:text-indigo-600">Favorites</a></li>
+        <li><a data-nav-link="favorites" href="./favorites.html" class="nav-link block text-slate-600 hover:text-indigo-600">Favorites (<span data-favorites-count>0</span>)</a></li>
         <li><a data-nav-link="about" href="./about.html" class="nav-link block text-slate-600 hover:text-indigo-600">About</a></li>
       </ul>
     </header>

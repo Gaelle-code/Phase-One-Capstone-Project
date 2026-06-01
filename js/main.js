@@ -8,8 +8,8 @@
 // ========================================
 
 import { fetchBooksByTitle } from "./api/fetchBooks.js";
-import { toggleFavorite } from "./modules/favorites.js";
-import { renderBookGrid, renderStatus, setupNavbar } from "./ui.js";
+import { addFavorite, removeFavorite } from "./modules/favorites.js";
+import { renderBookGrid, renderStatus, setupNavbar, showToast, updateFavoritesCount } from "./ui.js";
 
 // Cache important DOM elements once at the top of the file.
 // This keeps later functions focused on behavior instead of repeatedly querying the page.
@@ -23,8 +23,11 @@ const statusContainer = document.getElementById("status-container");
 // before saving it to localStorage.
 let currentBooks = [];
 
-// Highlight the current page and enable the mobile navigation toggle.
+// Initialize shared UI behavior before any book data is loaded.
+// setupNavbar handles responsive navigation, and updateFavoritesCount displays
+// the current localStorage total in both desktop and mobile nav links.
 setupNavbar("home");
+updateFavoritesCount();
 
 // Fetch and render books for the Home page.
 // The UI intentionally moves through clear states:
@@ -76,10 +79,29 @@ booksGrid.addEventListener("click", (event) => {
   const selectedBook = currentBooks.find((book) => book.key === bookKey);
   if (!selectedBook) return;
 
-  // toggleFavorite updates localStorage, then we rerender so button labels/colors
-  // immediately reflect the new favorite state.
-  toggleFavorite(selectedBook);
+  // The rendered button stores the intended action in data-favorite-action.
+  // Reading that value here keeps the interaction explicit:
+  // - "add" saves the selected book
+  // - "remove" deletes it from favorites
+  // Afterward, the grid is rerendered so the button label stays accurate.
+  const { favoriteAction } = button.dataset;
+  if (favoriteAction === "remove") {
+    const result = removeFavorite(selectedBook.key);
+    if (result.wasRemoved) {
+      showToast("Book removed from favorites.", "success");
+    }
+  } else {
+    const result = addFavorite(selectedBook);
+    if (result.wasAdded) {
+      showToast("Book added to favorites successfully.", "success");
+    } else if (result.alreadyExists) {
+      showToast("This book is already in your favorites.", "info");
+    }
+  }
+
+  // Keep the navbar badge synchronized with the updated favorites array.
   renderBookGrid(booksGrid, currentBooks);
+  updateFavoritesCount();
 });
 
 // Initial content:

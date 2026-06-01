@@ -9,7 +9,7 @@
 
 import { getFavorites } from "./storage.js";
 import { removeFavorite } from "./modules/favorites.js";
-import { renderBookGrid, renderStatus, setupNavbar } from "./ui.js";
+import { renderBookGrid, renderStatus, setupNavbar, showToast, updateFavoritesCount } from "./ui.js";
 
 // These containers are the only parts of the page that need dynamic updates.
 const favoritesGrid = document.getElementById("favorites-grid");
@@ -17,6 +17,7 @@ const statusContainer = document.getElementById("status-container");
 
 // Activate shared navbar behavior and mark Favorites as the current page.
 setupNavbar("favorites");
+updateFavoritesCount();
 
 // Render the full Favorites page state from localStorage.
 // This function is called on initial page load and again after removing a book,
@@ -28,12 +29,14 @@ function renderFavoritesPage() {
   if (!favorites.length) {
     favoritesGrid.innerHTML = "";
     renderStatus(statusContainer, "empty", "No favorite books yet. Add some from the Home page.");
+    updateFavoritesCount();
     return;
   }
 
   // Clear any previous message and render cards using the shared UI helper.
   renderStatus(statusContainer, "");
   renderBookGrid(favoritesGrid, favorites, true);
+  updateFavoritesCount();
 }
 
 // Event delegation for remove buttons:
@@ -47,7 +50,10 @@ favoritesGrid.addEventListener("click", (event) => {
   const { bookKey } = button.dataset;
 
   // Update localStorage first, then rerender from storage so state and UI stay aligned.
-  removeFavorite(bookKey);
+  const result = removeFavorite(bookKey);
+  if (result.wasRemoved) {
+    showToast("Book removed from favorites.", "success");
+  }
   renderFavoritesPage();
 });
 
