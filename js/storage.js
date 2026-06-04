@@ -22,7 +22,7 @@ export function getFavorites() {
 
 /**
  * Persists the favorites collection and updates the cached count.
- * @param {Array<Object>} favorites - The updated list of books.
+ * @arg {Array<Object>} favorites - The updated list of books.
  */
 export function saveFavorites(favorites) {
   try {
@@ -59,7 +59,7 @@ export function getFavoritesCount() {
 
 /**
  * Updates the cached favorites count.
- * @param {number} count 
+ * @arg {number} count 
  */
 export function saveFavoritesCount(count) {
   try {
