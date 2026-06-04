@@ -1,12 +1,18 @@
-// Shared UI helpers used by multiple pages.
+/**
+ * UI Utility Module.
+ * Responsible for DOM manipulation, component rendering, and user feedback (toasts/status).
+ */
 
 import { isFavorite } from "./modules/favorites.js";
 import { syncFavoritesCount } from "./storage.js";
 
 const COVER_BASE_URL = "https://covers.openlibrary.org/b/id";
-
 const TOAST_DURATION_MS = 3500;
 
+/**
+ * Lazily creates or retrieves the toast notification container.
+ * @returns {HTMLElement} The container element.
+ */
 function getToastContainer() {
   let toastContainer = document.getElementById("toast-container");
 
@@ -24,6 +30,11 @@ function getToastContainer() {
   return toastContainer;
 }
 
+/**
+ * Displays a non-blocking notification to the user.
+ * @param {string} message - Content of the notification.
+ * @param {'success'|'info'|'error'} type - Visual theme of the toast.
+ */
 export function showToast(message, type = "info") {
   if (!message) return;
 
@@ -44,6 +55,7 @@ export function showToast(message, type = "info") {
 
   toastContainer.appendChild(toast);
 
+  // Trigger animation after insertion
   requestAnimationFrame(() => {
     toast.classList.remove("opacity-0", "translate-x-2");
     toast.classList.add("opacity-100", "translate-x-0");
@@ -58,6 +70,10 @@ export function showToast(message, type = "info") {
   window.setTimeout(hideToast, TOAST_DURATION_MS);
 }
 
+/**
+ * Updates the favorites count badge in the global navigation.
+ * @returns {number} The current favorites count.
+ */
 export function updateFavoritesCount() {
   const count = syncFavoritesCount();
 
@@ -72,6 +88,10 @@ export function updateFavoritesCount() {
   return count;
 }
 
+/**
+ * Initializes navigation logic: mobile menu toggle and active link highlighting.
+ * @param {string} activePage - The identifier for the current active page.
+ */
 export function setupNavbar(activePage) {
   const toggleButton = document.getElementById("menu-toggle");
   const mobileMenu = document.getElementById("mobile-menu");
@@ -84,6 +104,7 @@ export function setupNavbar(activePage) {
     });
   }
 
+  // Highlight current page link
   document.querySelectorAll("[data-nav-link]").forEach((link) => {
     if (link.getAttribute("data-nav-link") === activePage) {
       link.classList.add("active-nav");
@@ -93,7 +114,12 @@ export function setupNavbar(activePage) {
   updateFavoritesCount();
 }
 
-// Render loading, empty, error, or info messages.
+/**
+ * Renders status messages (loading, empty, error) into a designated container.
+ * @param {HTMLElement} container - The target DOM element.
+ * @param {'loading'|'empty'|'error'|'info'} type - Status type.
+ * @param {string} [message] - Descriptive message.
+ */
 export function renderStatus(container, type, message) {
   if (!container) return;
 
@@ -125,11 +151,20 @@ export function renderStatus(container, type, message) {
   `;
 }
 
+/**
+ * Generates a valid cover image URL or a placeholder.
+ * @param {string|number} coverId - The Open Library cover ID.
+ */
 function getCoverUrl(coverId) {
   return coverId ? `${COVER_BASE_URL}/${coverId}-M.jpg` : "https://placehold.co/300x450/e2e8f0/475569?text=No+Cover";
 }
 
-// Create reusable HTML for one book card.
+/**
+ * Generates HTML for a single book card component.
+ * @param {Object} book - The book data object.
+ * @param {boolean} [showRemoveOnly=false] - If true, restricts actions to removal.
+ * @returns {string} HTML string.
+ */
 export function createBookCard(book, showRemoveOnly = false) {
   const favorite = isFavorite(book.key);
 
@@ -162,11 +197,18 @@ export function createBookCard(book, showRemoveOnly = false) {
   `;
 }
 
+/**
+ * Bulk renders book cards into a grid.
+ * @param {HTMLElement} container - The container element.
+ * @param {Array<Object>} books - List of books to render.
+ * @param {boolean} [showRemoveOnly=false] - Action mode flag.
+ */
 export function renderBookGrid(container, books, showRemoveOnly = false) {
   if (!container) return;
   container.innerHTML = books.map((book) => createBookCard(book, showRemoveOnly)).join("");
 }
 
+// Global initialization for static pages (e.g., About)
 if (window.location.pathname.endsWith("about.html")) {
   setupNavbar("about");
 }
