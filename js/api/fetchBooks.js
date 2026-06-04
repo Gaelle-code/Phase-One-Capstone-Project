@@ -7,7 +7,7 @@ const BASE_URL = "https://openlibrary.org/search.json?q=";
 /**
  * Normalizes raw API data into a predictable application-specific book object.
  * This decouples the UI from changes in the external API response structure.
- * @param {Object} book - The raw book record from Open Library.
+ * @arg {Object} book - The raw book record from Open Library.
  * @returns {Object} A sanitized book object.
  */
 function formatBook(book) {
@@ -23,7 +23,7 @@ function formatBook(book) {
 /**
  * Executes a search query against the Open Library API.
  * Includes sanitization, error handling, and result limiting.
- * @param {string} query - The search query.
+ * @arg {string} query - The search query.
  * @returns {Promise<Array<Object>>} A promise that resolves to an array of formatted books.
  */
 export async function fetchBooksByTitle(query) {
