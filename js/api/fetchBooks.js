@@ -1,7 +1,15 @@
-// Open Library API helpers.
+/**
+ * API Service Layer for interacting with the Open Library Search API.
+ */
 
 const BASE_URL = "https://openlibrary.org/search.json?q=";
 
+/**
+ * Normalizes raw API data into a predictable application-specific book object.
+ * This decouples the UI from changes in the external API response structure.
+ * @param {Object} book - The raw book record from Open Library.
+ * @returns {Object} A sanitized book object.
+ */
 function formatBook(book) {
   return {
     key: book.key || `fallback-${book.title || Math.random()}`,
@@ -12,6 +20,12 @@ function formatBook(book) {
   };
 }
 
+/**
+ * Executes a search query against the Open Library API.
+ * Includes sanitization, error handling, and result limiting.
+ * @param {string} query - The search query.
+ * @returns {Promise<Array<Object>>} A promise that resolves to an array of formatted books.
+ */
 export async function fetchBooksByTitle(query) {
   const cleanQuery = query.trim();
   if (!cleanQuery) return [];
@@ -20,14 +34,15 @@ export async function fetchBooksByTitle(query) {
     const response = await fetch(`${BASE_URL}${encodeURIComponent(cleanQuery)}`);
 
     if (!response.ok) {
-      throw new Error(`Request failed with status ${response.status}`);
+      throw new Error(`API error: Request failed with status ${response.status}`);
     }
 
     const data = await response.json();
 
+    // Map and limit results to maintain UI performance and layout consistency
     return (data.docs || []).slice(0, 24).map(formatBook);
   } catch (error) {
-    console.error("Error while fetching books:", error);
-    throw new Error("Unable to fetch books right now. Please try again.");
+    console.error("[fetchBooksByTitle] Failure:", error);
+    throw new Error("Unable to fetch books right now. Please check your connection and try again.");
   }
 }
