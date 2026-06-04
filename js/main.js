@@ -1,61 +1,50 @@
-// ========================================
-// Main Application Entry
-// Handles the Home page experience:
-// - initializes shared navigation behavior
-// - fetches books from the Open Library API
-// - renders search results into the book grid
-// - connects favorite buttons to localStorage state
-// ========================================
+/**
+ * Main entry point for the Home page.
+ * Coordinates book searching, result rendering, and favorite status management.
+ */
 
 import { fetchBooksByTitle } from "./api/fetchBooks.js";
-import { toggleFavorite } from "./modules/favorites.js";
-import { renderBookGrid, renderStatus, setupNavbar } from "./ui.js";
+import { addFavorite, removeFavorite } from "./modules/favorites.js";
+import { renderBookGrid, renderStatus, setupNavbar, showToast, updateFavoritesCount } from "./ui.js";
 
-// Cache important DOM elements once at the top of the file.
-// This keeps later functions focused on behavior instead of repeatedly querying the page.
+// --- DOM Elements ---
 const searchForm = document.getElementById("search-form");
 const searchInput = document.getElementById("search-input");
 const booksGrid = document.getElementById("books-grid");
 const statusContainer = document.getElementById("status-container");
 
-// currentBooks stores the latest API results in memory.
-// When a favorite button is clicked, we use this array to find the full book object
-// before saving it to localStorage.
+/** @type {Array<Object>} Internal state to track current search results for UI synchronization */
 let currentBooks = [];
 
-// Highlight the current page and enable the mobile navigation toggle.
+// Initialize application state and UI components
 setupNavbar("home");
+updateFavoritesCount();
 
-// Fetch and render books for the Home page.
-// The UI intentionally moves through clear states:
-// loading -> success with cards, empty results, or error feedback.
+/**
+ * Orchestrates the book search workflow: updates UI state, fetches data, and handles edge cases.
+ * @arg {string} query - The search term entered by the user.
+ */
 async function searchBooks(query) {
   renderStatus(statusContainer, "loading");
   booksGrid.innerHTML = "";
 
   try {
-    // fetchBooksByTitle returns simplified book objects that are ready for rendering.
     const books = await fetchBooksByTitle(query);
     currentBooks = books;
 
-    // Empty-state feedback helps users recover instead of staring at a blank grid.
     if (!books.length) {
       renderStatus(statusContainer, "empty", "No results found. Try another title.");
       return;
     }
 
-    // Clear the loading message and render the latest search results.
-    renderStatus(statusContainer, "");
+    renderStatus(statusContainer, ""); // Clear status messages
     renderBookGrid(booksGrid, books);
   } catch (error) {
-    // Keep API or network failures visible to the user while logging details in fetchBooks.js.
     renderStatus(statusContainer, "error", error.message);
   }
 }
 
-// Listen for search form submission.
-// preventDefault stops the browser from reloading the page so JavaScript can
-// fetch and render matching books dynamically.
+// Handle search form submissions
 searchForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   const query = searchInput.value.trim();
@@ -63,25 +52,39 @@ searchForm.addEventListener("submit", async (event) => {
   await searchBooks(query);
 });
 
-// Event delegation:
-// The book cards are created after the API request, so individual buttons do not
-// exist when the page first loads. One listener on the grid can still catch
-// clicks from any current or future favorite button inside it.
+/**
+ * Event Delegation: Monitors clicks on the books grid to handle favorite toggling.
+ * This approach is more memory-efficient than attaching listeners to each card.
+ */
 booksGrid.addEventListener("click", (event) => {
   const button = event.target.closest(".favorite-btn");
   if (!button) return;
 
-  // data-book-key links the clicked button back to its book object in currentBooks.
   const { bookKey } = button.dataset;
   const selectedBook = currentBooks.find((book) => book.key === bookKey);
   if (!selectedBook) return;
 
-  // toggleFavorite updates localStorage, then we rerender so button labels/colors
-  // immediately reflect the new favorite state.
-  toggleFavorite(selectedBook);
+  const { favoriteAction } = button.dataset;
+  
+  // Logic for adding/removing favorites with feedback
+  if (favoriteAction === "remove") {
+    const result = removeFavorite(selectedBook.key);
+    if (result.wasRemoved) {
+      showToast("Book removed from favorites.", "success");
+    }
+  } else {
+    const result = addFavorite(selectedBook);
+    if (result.wasAdded) {
+      showToast("Book added to favorites successfully.", "success");
+    } else if (result.alreadyExists) {
+      showToast("This book is already in your favorites.", "info");
+    }
+  }
+
+  // Synchronize UI after state change
   renderBookGrid(booksGrid, currentBooks);
+  updateFavoritesCount();
 });
 
-// Initial content:
-// Loading a default search gives the homepage useful content before the user types.
+// Load initial content on application start
 searchBooks("bestsellers");

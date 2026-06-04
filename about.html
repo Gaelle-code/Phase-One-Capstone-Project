@@ -1,12 +1,6 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <!--
-      About Page
-      This file explains the learning purpose of Gaelle Book Store.
-      It imports js/ui.js only for shared navbar behavior, because this page
-      does not need API calls, localStorage reads, or dynamic book rendering.
-    -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gaelle Book Store | About</title>
@@ -15,11 +9,7 @@
     <link rel="stylesheet" href="./css/style.css" />
   </head>
   <body class="min-h-screen bg-slate-50 text-slate-800">
-    <!--
-      Shared header
-      Reusing the same markup across pages makes navigation predictable.
-      The active page is highlighted by ui.js based on the data-nav-link value.
-    -->
+    <!-- Shared navigation -->
     <header class="bg-white shadow-sm">
       <nav class="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <a href="./index.html" class="flex items-center gap-2 text-xl font-bold text-indigo-600">
@@ -36,22 +26,18 @@
         </button>
         <ul id="nav-menu" class="hidden gap-6 text-sm font-medium md:flex">
           <li><a data-nav-link="home" href="./index.html" class="nav-link text-slate-600 hover:text-indigo-600">Home</a></li>
-          <li><a data-nav-link="favorites" href="./favorites.html" class="nav-link text-slate-600 hover:text-indigo-600">Favorites</a></li>
+          <li><a data-nav-link="favorites" href="./favorites.html" class="nav-link text-slate-600 hover:text-indigo-600">Favorites (<span data-favorites-count>0</span>)</a></li>
           <li><a data-nav-link="about" href="./about.html" class="nav-link text-slate-600 hover:text-indigo-600">About</a></li>
         </ul>
       </nav>
       <ul id="mobile-menu" class="hidden space-y-2 border-t border-slate-200 px-4 py-4 text-sm font-medium md:hidden">
         <li><a data-nav-link="home" href="./index.html" class="nav-link block text-slate-600 hover:text-indigo-600">Home</a></li>
-        <li><a data-nav-link="favorites" href="./favorites.html" class="nav-link block text-slate-600 hover:text-indigo-600">Favorites</a></li>
+        <li><a data-nav-link="favorites" href="./favorites.html" class="nav-link block text-slate-600 hover:text-indigo-600">Favorites (<span data-favorites-count>0</span>)</a></li>
         <li><a data-nav-link="about" href="./about.html" class="nav-link block text-slate-600 hover:text-indigo-600">About</a></li>
       </ul>
     </header>
 
-    <!--
-      Human-Centric Design Content
-      This page serves as the professional documentation for the project.
-      It highlights the intersection of technology and user experience.
-    -->
+    <!-- About and project explanation content -->
     <main class="mx-auto w-full max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
       <header class="mb-12 text-center">
         <h1 class="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">The Story of Gaelle Book Store</h1>
@@ -59,7 +45,7 @@
       </header>
 
       <div class="grid grid-cols-1 gap-12 lg:grid-cols-3">
-        <!-- Section: Our Mission (The Human Connection) -->
+        <!-- Main story and user experience -->
         <section class="lg:col-span-2">
           <h2 class="text-2xl font-bold text-indigo-600">Our Mission</h2>
           <div class="mt-4 space-y-6 text-lg text-slate-700 leading-relaxed">
@@ -88,7 +74,7 @@
           </div>
         </section>
 
-        <!-- Section: Technical Blueprint -->
+        <!-- Technical summary -->
         <aside class="space-y-8 lg:border-l lg:border-slate-200 lg:pl-8">
           <div>
             <h2 class="text-sm font-bold uppercase tracking-widest text-slate-500">Technical Blueprint</h2>
@@ -134,7 +120,7 @@
       </div>
     </main>
 
-    <!-- Shared footer with a lightweight page-specific message. -->
+    <!-- Footer -->
     <footer class="border-t border-slate-200 bg-white py-6">
       <div class="mx-auto flex w-full max-w-7xl items-center justify-between px-4 text-sm text-slate-500 sm:px-6 lg:px-8">
         <p>Gaelle Book Store</p>

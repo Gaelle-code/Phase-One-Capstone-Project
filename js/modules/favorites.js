@@ -1,47 +1,64 @@
-// ========================================
-// Favorites State Module
-// Responsible for favorite-book rules:
-// - checking whether a book is already saved
-// - adding a new favorite
-// - removing an existing favorite
-// - delegating persistence to storage.js
-// ========================================
+/**
+ * Business Logic Module for Favorite Management.
+ * Encapsulates operations for checking, adding, and removing favorites.
+ */
 
 import { getFavorites, saveFavorites } from "../storage.js";
 
-// Check if a book is already in the saved favorites list.
-// The UI uses this to decide whether a card button should say
-// "Add Favorite" or "Remove Favorite".
+/**
+ * Checks if a specific book is in the favorites list.
+ * @arg {string} bookKey - Unique identifier for the book.
+ * @returns {boolean}
+ */
 export function isFavorite(bookKey) {
   const favorites = getFavorites();
   return favorites.some((book) => book.key === bookKey);
 }
 
-// Toggle a book in or out of favorites.
-// This keeps the Home page simple: the page does not need to know whether
-// the action is an add or remove, only that favorites should be toggled.
+/**
+ * Adds a book to favorites with duplication prevention.
+ * @arg {Object} book - The book object to add.
+ * @returns {Object} Result object containing the new state and status flags.
+ */
+export function addFavorite(book) {
+  const favorites = getFavorites();
+  const alreadyExists = favorites.some((favorite) => favorite.key === book.key);
+
+  if (alreadyExists) {
+    return { updatedFavorites: favorites, wasAdded: false, alreadyExists: true };
+  }
+
+  const updatedFavorites = [...favorites, book];
+  saveFavorites(updatedFavorites);
+  return { updatedFavorites, wasAdded: true, alreadyExists: false };
+}
+
+/**
+ * Toggles a book's favorite status.
+ * @arg {Object} book 
+ * @returns {Object} Result of the add or remove operation.
+ */
 export function toggleFavorite(book) {
   const favorites = getFavorites();
   const exists = favorites.some((fav) => fav.key === book.key);
 
-  // If the book already exists, remove it and persist the updated array.
   if (exists) {
-    const updated = favorites.filter((fav) => fav.key !== book.key);
-    saveFavorites(updated);
-    return { updatedFavorites: updated, wasAdded: false };
+    return removeFavorite(book.key);
   }
 
-  // If the book is new, append it and persist the updated array.
-  const updated = [...favorites, book];
-  saveFavorites(updated);
-  return { updatedFavorites: updated, wasAdded: true };
+  return addFavorite(book);
 }
 
-// Remove one saved book by its key.
-// The Favorites page uses this for its remove action, then rerenders from storage.
+/**
+ * Removes a book from favorites by its key.
+ * @arg {string} bookKey 
+ * @returns {Object} Result object with removal status.
+ */
 export function removeFavorite(bookKey) {
   const favorites = getFavorites();
   const updated = favorites.filter((book) => book.key !== bookKey);
+
+  const wasRemoved = updated.length !== favorites.length;
   saveFavorites(updated);
-  return updated;
+  return { updatedFavorites: updated, wasRemoved };
 }

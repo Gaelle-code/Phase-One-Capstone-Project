@@ -1,17 +1,15 @@
-// ========================================
-// Open Library API Module
-// Responsible for:
-// - building search requests
-// - fetching book data asynchronously
-// - handling API/network errors safely
-// - transforming raw API results into simple objects the UI can render
-// ========================================
+/**
+ * API Service Layer for interacting with the Open Library Search API.
+ */
 
 const BASE_URL = "https://openlibrary.org/search.json?q=";
 
-// Convert one raw Open Library result into the smaller shape our app needs.
-// Keeping this transformation here prevents UI files from depending on the
-// API's original field names such as author_name, first_publish_year, and cover_i.
+/**
+ * Normalizes raw API data into a predictable application-specific book object.
+ * This decouples the UI from changes in the external API response structure.
+ * @arg {Object} book - The raw book record from Open Library.
+ * @returns {Object} A sanitized book object.
+ */
 function formatBook(book) {
   return {
     key: book.key || `fallback-${book.title || Math.random()}`,
@@ -22,28 +20,29 @@ function formatBook(book) {
   };
 }
 
-// Fetch book data asynchronously from Open Library.
-// try/catch keeps the app from crashing if the request fails, and the thrown
-// user-friendly error message is displayed by main.js.
+/**
+ * Executes a search query against the Open Library API.
+ * Includes sanitization, error handling, and result limiting.
+ * @arg {string} query - The search query.
+ * @returns {Promise<Array<Object>>} A promise that resolves to an array of formatted books.
+ */
 export async function fetchBooksByTitle(query) {
   const cleanQuery = query.trim();
   if (!cleanQuery) return [];
 
   try {
-    // encodeURIComponent makes titles like "Harry Potter" or "C# basics" safe for URLs.
     const response = await fetch(`${BASE_URL}${encodeURIComponent(cleanQuery)}`);
 
-    // fetch only rejects on network errors, so we manually handle bad HTTP responses.
     if (!response.ok) {
-      throw new Error(`Request failed with status ${response.status}`);
+      throw new Error(`API error: Request failed with status ${response.status}`);
     }
 
     const data = await response.json();
 
-    // Limit results to keep rendering fast and the page approachable for beginners.
+    // Map and limit results to maintain UI performance and layout consistency
     return (data.docs || []).slice(0, 24).map(formatBook);
   } catch (error) {
-    console.error("Error while fetching books:", error);
-    throw new Error("Unable to fetch books right now. Please try again.");
+    console.error("[fetchBooksByTitle] Failure:", error);
+    throw new Error("Unable to fetch books right now. Please check your connection and try again.");
   }
 }
