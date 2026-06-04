@@ -32,8 +32,8 @@ function getToastContainer() {
 
 /**
  * Displays a non-blocking notification to the user.
- * @param {string} message - Content of the notification.
- * @param {'success'|'info'|'error'} type - Visual theme of the toast.
+ * @arg {string} message - Content of the notification.
+ * @arg {'success'|'info'|'error'} type - Visual theme of the toast.
  */
 export function showToast(message, type = "info") {
   if (!message) return;
@@ -90,7 +90,7 @@ export function updateFavoritesCount() {
 
 /**
  * Initializes navigation logic: mobile menu toggle and active link highlighting.
- * @param {string} activePage - The identifier for the current active page.
+ * @arg {string} activePage - The identifier for the current active page.
  */
 export function setupNavbar(activePage) {
   const toggleButton = document.getElementById("menu-toggle");
@@ -116,9 +116,9 @@ export function setupNavbar(activePage) {
 
 /**
  * Renders status messages (loading, empty, error) into a designated container.
- * @param {HTMLElement} container - The target DOM element.
- * @param {'loading'|'empty'|'error'|'info'} type - Status type.
- * @param {string} [message] - Descriptive message.
+ * @arg {HTMLElement} container - The target DOM element.
+ * @arg {'loading'|'empty'|'error'|'info'} type - Status type.
+ * @arg {string} [message] - Descriptive message.
  */
 export function renderStatus(container, type, message) {
   if (!container) return;
@@ -153,7 +153,7 @@ export function renderStatus(container, type, message) {
 
 /**
  * Generates a valid cover image URL or a placeholder.
- * @param {string|number} coverId - The Open Library cover ID.
+ * @arg {string|number} coverId - The Open Library cover ID.
  */
 function getCoverUrl(coverId) {
   return coverId ? `${COVER_BASE_URL}/${coverId}-M.jpg` : "https://placehold.co/300x450/e2e8f0/475569?text=No+Cover";
@@ -161,8 +161,8 @@ function getCoverUrl(coverId) {
 
 /**
  * Generates HTML for a single book card component.
- * @param {Object} book - The book data object.
- * @param {boolean} [showRemoveOnly=false] - If true, restricts actions to removal.
+ * @arg {Object} book - The book data object.
+ * @arg {boolean} [showRemoveOnly=false] - If true, restricts actions to removal.
  * @returns {string} HTML string.
  */
 export function createBookCard(book, showRemoveOnly = false) {
@@ -199,9 +199,9 @@ export function createBookCard(book, showRemoveOnly = false) {
 
 /**
  * Bulk renders book cards into a grid.
- * @param {HTMLElement} container - The container element.
- * @param {Array<Object>} books - List of books to render.
- * @param {boolean} [showRemoveOnly=false] - Action mode flag.
+ * @arg {HTMLElement} container - The container element.
+ * @arg {Array<Object>} books - List of books to render.
+ * @arg {boolean} [showRemoveOnly=false] - Action mode flag.
  */
 export function renderBookGrid(container, books, showRemoveOnly = false) {
   if (!container) return;
