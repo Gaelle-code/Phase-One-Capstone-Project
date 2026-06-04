@@ -22,7 +22,7 @@ updateFavoritesCount();
 
 /**
  * Orchestrates the book search workflow: updates UI state, fetches data, and handles edge cases.
- * @param {string} query - The search term entered by the user.
+ * @arg {string} query - The search term entered by the user.
  */
 async function searchBooks(query) {
   renderStatus(statusContainer, "loading");
