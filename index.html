@@ -1,14 +1,6 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <!--
-      Home Page
-      This file defines the main discovery experience for Gaelle Book Store.
-      JavaScript from js/main.js connects this static structure to:
-      - Open Library API search results
-      - dynamic book card rendering
-      - favorite/unfavorite interactions
-    -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gaelle Book Store | Home</title>
@@ -17,12 +9,6 @@
     <link rel="stylesheet" href="./css/style.css" />
   </head>
   <body class="min-h-screen bg-slate-50 text-slate-800">
-    <!--
-      Shared site header
-      The same navigation pattern appears on every page so users can move
-      between Home, Favorites, and About without learning a new layout.
-      js/ui.js adds the active-link styling and mobile menu behavior.
-    -->
     <header class="bg-white shadow-sm">
       <nav class="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <a href="./index.html" class="flex items-center gap-2 text-xl font-bold text-indigo-600">
@@ -38,20 +24,12 @@
           Menu
         </button>
         <ul id="nav-menu" class="hidden gap-6 text-sm font-medium md:flex">
-          <!--
-            Desktop navigation:
-            The Favorites link includes a live count span that ui.js updates from localStorage.
-          -->
           <li><a data-nav-link="home" href="./index.html" class="nav-link text-slate-600 hover:text-indigo-600">Home</a></li>
           <li><a data-nav-link="favorites" href="./favorites.html" class="nav-link text-slate-600 hover:text-indigo-600">Favorites (<span data-favorites-count>0</span>)</a></li>
           <li><a data-nav-link="about" href="./about.html" class="nav-link text-slate-600 hover:text-indigo-600">About</a></li>
         </ul>
       </nav>
       <ul id="mobile-menu" class="hidden space-y-2 border-t border-slate-200 px-4 py-4 text-sm font-medium md:hidden">
-        <!--
-          Mobile navigation:
-          Hidden by default and toggled by ui.js when the Menu button is clicked.
-        -->
         <li><a data-nav-link="home" href="./index.html" class="nav-link block text-slate-600 hover:text-indigo-600">Home</a></li>
         <li><a data-nav-link="favorites" href="./favorites.html" class="nav-link block text-slate-600 hover:text-indigo-600">Favorites (<span data-favorites-count>0</span>)</a></li>
         <li><a data-nav-link="about" href="./about.html" class="nav-link block text-slate-600 hover:text-indigo-600">About</a></li>
@@ -59,11 +37,6 @@
     </header>
 
     <main>
-      <!--
-        Hero section
-        This gives the homepage a clear purpose before the interactive search area.
-        The spacing uses mobile-first Tailwind utilities and scales up at sm/lg breakpoints.
-      -->
       <section class="bg-indigo-600 px-4 py-16 text-white sm:px-6 lg:px-8">
         <div class="mx-auto max-w-7xl">
           <h1 class="text-3xl font-bold sm:text-4xl lg:text-5xl">Discover your next favorite book</h1>
@@ -73,13 +46,6 @@
         </div>
       </section>
 
-      <!--
-        Search and results section
-        Flow:
-        1. User submits a title in the form.
-        2. main.js prevents the page reload and fetches matching books.
-        3. ui.js renders loading, empty, error, or book-card states below.
-      -->
       <section class="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <form id="search-form" class="flex flex-col gap-3 sm:flex-row" aria-label="Search books by title">
           <label for="search-input" class="sr-only">Search for a book title</label>
@@ -98,21 +64,12 @@
           </button>
         </form>
 
-        <!-- Status messages are injected here so screen readers can announce updates. -->
         <div id="status-container" class="mt-6" aria-live="polite"></div>
 
-        <!--
-          Responsive book grid:
-          - 1 column on mobile
-          - 2 columns from the sm breakpoint
-          - 4 columns from the lg breakpoint
-          The grid is empty in HTML because JavaScript renders API results dynamically.
-        -->
         <section id="books-grid" class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4" aria-label="Book results"></section>
       </section>
     </main>
 
-    <!-- Shared footer keeps the app feeling complete without adding extra behavior. -->
     <footer class="border-t border-slate-200 bg-white py-6">
       <div class="mx-auto flex w-full max-w-7xl items-center justify-between px-4 text-sm text-slate-500 sm:px-6 lg:px-8">
         <p>Gaelle Book Store</p>

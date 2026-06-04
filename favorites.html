@@ -1,12 +1,6 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <!--
-      Favorites Page
-      This file provides the static structure for saved books.
-      js/favoritesPage.js reads localStorage, renders favorite book cards,
-      and removes books when the user clicks a remove action.
-    -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gaelle Book Store | Favorites</title>
@@ -15,11 +9,6 @@
     <link rel="stylesheet" href="./css/style.css" />
   </head>
   <body class="min-h-screen bg-slate-50 text-slate-800">
-    <!--
-      Shared navigation
-      ui.js keeps the mobile menu behavior and active-page styling consistent
-      with the Home and About pages.
-    -->
     <header class="bg-white shadow-sm">
       <nav class="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <a href="./index.html" class="flex items-center gap-2 text-xl font-bold text-indigo-600">
@@ -35,47 +24,27 @@
           Menu
         </button>
         <ul id="nav-menu" class="hidden gap-6 text-sm font-medium md:flex">
-          <!--
-            Desktop navigation:
-            The Favorites count is shared with the Home page and refreshed from localStorage.
-          -->
           <li><a data-nav-link="home" href="./index.html" class="nav-link text-slate-600 hover:text-indigo-600">Home</a></li>
           <li><a data-nav-link="favorites" href="./favorites.html" class="nav-link text-slate-600 hover:text-indigo-600">Favorites (<span data-favorites-count>0</span>)</a></li>
           <li><a data-nav-link="about" href="./about.html" class="nav-link text-slate-600 hover:text-indigo-600">About</a></li>
         </ul>
       </nav>
       <ul id="mobile-menu" class="hidden space-y-2 border-t border-slate-200 px-4 py-4 text-sm font-medium md:hidden">
-        <!--
-          Mobile navigation:
-          Kept separate from the desktop list so Tailwind can switch layouts cleanly at md.
-        -->
         <li><a data-nav-link="home" href="./index.html" class="nav-link block text-slate-600 hover:text-indigo-600">Home</a></li>
         <li><a data-nav-link="favorites" href="./favorites.html" class="nav-link block text-slate-600 hover:text-indigo-600">Favorites (<span data-favorites-count>0</span>)</a></li>
         <li><a data-nav-link="about" href="./about.html" class="nav-link block text-slate-600 hover:text-indigo-600">About</a></li>
       </ul>
     </header>
 
-    <!--
-      Favorites content area
-      This page starts with an empty grid because favorites are user-specific.
-      JavaScript pulls the saved array from localStorage and renders the UI.
-    -->
     <main class="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <h1 class="text-3xl font-bold">Your Favorite Books</h1>
       <p class="mt-2 text-slate-600">Manage books you saved from the home page.</p>
 
-      <!-- Dynamic feedback appears here, including the empty-state message. -->
       <div id="status-container" class="mt-6" aria-live="polite"></div>
 
-      <!--
-        Responsive favorites grid:
-        The same layout pattern as the Home page reinforces consistency.
-        Favorite cards are rendered by ui.js and controlled by favoritesPage.js.
-      -->
       <section id="favorites-grid" class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4" aria-label="Favorite books"></section>
     </main>
 
-    <!-- Shared footer with page-specific supporting text. -->
     <footer class="border-t border-slate-200 bg-white py-6">
       <div class="mx-auto flex w-full max-w-7xl items-center justify-between px-4 text-sm text-slate-500 sm:px-6 lg:px-8">
         <p>Gaelle Book Store</p>
